@@ -2,7 +2,11 @@
 
 ## Getting Started
 
-*to be written...*
+1. Download the projection CSV (see [Data Source](#data-source)) and save it in the repo root as `slp_data.csv`. CSV files are gitignored.
+2. Install dependencies: `pip install -r requirements.txt`
+3. Generate the charts: `python main.py` (one PNG per row, written to `output/`).
+   - `python main.py path/to/file.csv --out charts --limit 10` to change the input, output folder, or chart only the first rows.
+4. Or explore interactively in `analysis.ipynb`.
 
 ## Data Source
 

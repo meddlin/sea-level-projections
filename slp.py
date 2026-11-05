@@ -1,48 +1,43 @@
+import csv
+from dataclasses import dataclass
+from typing import Dict, List, Optional
+
+YEARS = (2005, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100, 2110, 2120, 2130, 2140, 2150)
+
+
+def _to_float(value: Optional[str]) -> Optional[float]:
+  """Blank or non-numeric cells become None instead of raising."""
+  try:
+    return float(value)
+  except (TypeError, ValueError):
+    return None
+
+
+@dataclass
 class Projection:
-  def __init__(
-      self, 
-      psmsl_site, 
-      psmsl_id, 
-      noaa_id, 
-      noaa_name,
-      rsl_grid_num,
-      lat,
-      long,
-      rsl2005,
-      rsl2020,
-      rsl2030,
-      rsl2040,
-      rsl2050,
-      rsl2060,
-      rsl2070,
-      rsl2080,
-      rsl2090,
-      rsl2100,
-      rsl2110,
-      rsl2120,
-      rsl2130,
-      rsl2140,
-      rsl2150
-    ):
-    self.psmsl_site = psmsl_site
-    self.psmsl_id = psmsl_id
-    self.noaa_id = noaa_id
-    self.noaa_name = noaa_name
-    self.rsl_grid_num = rsl_grid_num
-    self.lat = lat
-    self.long = long
-    self.rsl2005 = rsl2005
-    self.rsl2020 = rsl2020
-    self.rsl2030 = rsl2030
-    self.rsl2040 = rsl2040
-    self.rsl2050 = rsl2050
-    self.rsl2060 = rsl2060
-    self.rsl2070 = rsl2070
-    self.rsl2080 = rsl2080
-    self.rsl2090 = rsl2090
-    self.rsl2100 = rsl2100
-    self.rsl2110 = rsl2110
-    self.rsl2120 = rsl2120
-    self.rsl2130 = rsl2130
-    self.rsl2140 = rsl2140
-    self.rsl2150 = rsl2150
+  psmsl_site: str
+  psmsl_id: str
+  noaa_id: str
+  noaa_name: str
+  rsl_grid_num: str
+  lat: Optional[float]
+  long: Optional[float]
+  rsl: Dict[int, Optional[float]]  # year -> relative sea level (cm); None if the cell was blank
+
+  @classmethod
+  def from_row(cls, row: Dict[str, str]) -> "Projection":
+    return cls(
+      psmsl_site=row['PSMSL Site'],
+      psmsl_id=row['PSMSL ID'],
+      noaa_id=row['NOAA ID'],
+      noaa_name=row['NOAA Name'],
+      rsl_grid_num=row['RSL GridNum'],
+      lat=_to_float(row['Lat']),
+      long=_to_float(row['Long']),
+      rsl={year: _to_float(row[f'RSL{year} (cm)']) for year in YEARS},
+    )
+
+
+def load_projections(path: str) -> List[Projection]:
+  with open(path, newline='') as file:
+    return [Projection.from_row(row) for row in csv.DictReader(file)]

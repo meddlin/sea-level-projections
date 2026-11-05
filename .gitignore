@@ -6,3 +6,6 @@
 /include
 /lib
 /__pycache__
+
+/output
+.ipynb_checkpoints

@@ -1,35 +1,28 @@
-import csv
-from slp import Projection
+import argparse
+import sys
+from pathlib import Path
 
-# header_info = []
-# with open('SLR_TF U.S. Sea Level Projections.csv') as file:
-#     reader = csv.reader(file)
+from plotting import save_graph
+from slp import load_projections
 
-#     header_ct = 0
 
-#     for row in reader:
-#         if (header_ct < 17):
-#             header_info.append(row)
-#             header_ct = header_ct + 1
-#         else:
-#             proj = Projection(row[0], row[1])
-#             print(proj)
-#             print(row)
+def main() -> int:
+  parser = argparse.ArgumentParser(description='Chart NOAA sea level projections, one image per row.')
+  parser.add_argument('csv', nargs='?', default='slp_data.csv', help='projection CSV (default: slp_data.csv)')
+  parser.add_argument('--out', default='output', help='directory for chart images (default: output)')
+  parser.add_argument('--limit', type=int, help='only chart the first N rows')
+  args = parser.parse_args()
 
-file = csv.DictReader(open('slp_data.csv'))
-for row in file:
-    p = Projection(
-        row['PSMSL Site'],
-        row['PSMSL ID'],
-        row['NOAA ID'],
-        row['NOAA Name'],
-        row['RSL GridNum'],
-        row['Lat'],
-        row['Long'],
+  try:
+    projections = load_projections(args.csv)
+  except FileNotFoundError:
+    print(f'CSV not found: {args.csv} (see README for where to get it)', file=sys.stderr)
+    return 1
 
-        row['RSL2005 (cm)'],
-        row['RSL2020 (cm)'],
-        row['RSL2030 (cm)'],
-        row['RSL2040 (cm)'],
-    )
-    # print(row)
+  for index, projection in enumerate(projections[:args.limit]):
+    print(f'{save_graph(projection, index, Path(args.out))} ...saved')
+  return 0
+
+
+if __name__ == '__main__':
+  sys.exit(main())

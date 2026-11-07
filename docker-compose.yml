@@ -1,0 +1,32 @@
+# Web dashboard on :8000, JupyterLab on :8888. Both share the same image and data.
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATA_DIR: /data
+      JUPYTER_PORT: "8888"
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:-sealevel}
+    volumes:
+      - ./data:/data:ro
+    restart: unless-stopped
+
+  jupyter:
+    build: .
+    ports:
+      - "8888:8888"
+    environment:
+      DATA_DIR: /data
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:-sealevel}
+    volumes:
+      - ./data:/data
+      - ./notebooks:/notebooks
+    working_dir: /notebooks
+    # Allowed to be framed by the dashboard (other port, same host) on the home network.
+    command: >
+      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser
+      --ServerApp.root_dir=/notebooks
+      --ServerApp.allow_origin='*'
+      --ServerApp.tornado_settings='{"headers": {"Content-Security-Policy": "frame-ancestors *"}}'
+    restart: unless-stopped

@@ -6,6 +6,8 @@
 /include
 /lib
 /__pycache__
-
+/data/*
+!/data/.gitkeep
+.env
 /output
 .ipynb_checkpoints

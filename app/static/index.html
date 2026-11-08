@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sea Level Projections</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap bar">
+      <strong class="brand">Sea Level Projections</strong>
+      <nav>
+        <a href="#dashboard" id="nav-dashboard" class="active">Dashboard</a>
+        <a href="#notebook" id="nav-notebook">Notebook</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="view-dashboard" class="wrap">
+    <section class="intro">
+      <h1>How much higher will the sea be?</h1>
+      <p>
+        NOAA's 2022 technical report projects relative sea level rise for U.S. coastlines under five
+        scenarios, named for roughly how much <em>global</em> sea level rises by 2100. Local rise differs
+        from the global average because land is also moving: some coasts are sinking, others are rising.
+      </p>
+      <p class="muted">
+        Every number below is a change in centimetres since 2005. Each scenario has a median
+        projection plus a low and high bound of the likely range.
+      </p>
+    </section>
+
+    <div id="error" class="error" hidden></div>
+
+    <section class="controls">
+      <label>Location
+        <select id="site"></select>
+      </label>
+      <label>Scenario
+        <select id="scenario"></select>
+      </label>
+    </section>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="card">
+      <h2 id="chart-title">Projected rise</h2>
+      <p class="muted" id="chart-sub"></p>
+      <div class="chart-box"><canvas id="chart"></canvas></div>
+    </section>
+
+    <section class="card">
+      <h2>Where it rises the most</h2>
+      <p class="muted">All stations ranked by median rise for the selected scenario.</p>
+      <div class="row-controls">
+        <label>Year <select id="rank-year"></select></label>
+      </div>
+      <div class="chart-box tall"><canvas id="rank-chart"></canvas></div>
+    </section>
+
+    <section class="card explain">
+      <h2>Reading the scenarios</h2>
+      <dl id="scenario-list"></dl>
+      <h3>Why does my coast differ from the global number?</h3>
+      <p>
+        Relative sea level combines the ocean rising with the land moving up or down (vertical land
+        motion), plus regional ocean and gravity effects. The Gulf Coast and Mid-Atlantic tend to be
+        higher than the global average; parts of the Pacific Northwest and Alaska can be lower because
+        the land is rising.
+      </p>
+      <h3>Data</h3>
+      <p>
+        <a href="https://oceanservice.noaa.gov/hazards/sealevelrise/sealevelrise-data.html">2022 Sea Level Rise Technical Report data files</a>
+        &middot;
+        <a href="https://oceanservice.noaa.gov/hazards/sealevelrise/sealevelrise-tech-report-sections.html">Full technical report</a>.
+        Want to dig into the numbers yourself? Open the <a href="#notebook">Notebook</a>.
+      </p>
+    </section>
+  </main>
+
+  <main id="view-notebook" hidden>
+    <div class="nb-note wrap">
+      JupyterLab running in this container. Open <code>analysis.ipynb</code> from the file browser.
+      Data is at <code>/data/slp_data.csv</code>.
+      <a id="nb-external" target="_blank" rel="noopener">Open in its own tab</a>
+    </div>
+    <iframe id="jupyter" title="JupyterLab"></iframe>
+  </main>
+
+  <script src="/static/vendor/chart.umd.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

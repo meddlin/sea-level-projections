@@ -1,0 +1,8 @@
+.git
+.claude
+bin
+lib
+include
+__pycache__
+data
+notebooks

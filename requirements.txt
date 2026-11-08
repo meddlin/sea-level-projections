@@ -1,1 +1,6 @@
+fastapi
+uvicorn[standard]
+pandas
+numpy
 matplotlib>=3.5
+jupyterlab

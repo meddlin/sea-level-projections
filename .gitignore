@@ -9,4 +9,5 @@
 /data/*
 !/data/.gitkeep
 .env
+/output
 .ipynb_checkpoints

@@ -2,5 +2,5 @@ fastapi
 uvicorn[standard]
 pandas
 numpy
-matplotlib
+matplotlib>=3.5
 jupyterlab
